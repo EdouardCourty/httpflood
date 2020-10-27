@@ -6,7 +6,7 @@ from truncate import truncate as tru
 
 argv = sys.argv[1:len(sys.argv)]
 
-req = 1000
+r = 1000
 s = 1
 p = 25565
 
@@ -17,14 +17,14 @@ if len(argv) == 0:
 h = argv[0]
 
 if len(argv) == 3:
-    req = int(argv[1])
+    r = int(argv[1])
     s = int(argv[2])
 else:
     p = int(argv[1])
-    req = int(argv[2])
+    r = int(argv[2])
     s = int(argv[3])
 
-print(f"Starting with the following parameters:\n > h: {h}\n > Requests: {req}\n > Port: {p}\n > Threads: {s}")
+print(f"Starting with the following parameters:\n > h: {h}\n > Requests: {r}\n > Port: {p}\n > Threads: {s}")
 is_correct = str.lower(input("Are these values correct ? (Y/N) "))
 
 if not is_correct == "y":
@@ -52,11 +52,10 @@ def send(n):
 
 
 threads = []
-
 st = t.time()
 
 for i in range(s):
-    thread = threading.Thread(target=send, args=(int(req),))
+    thread = threading.Thread(target=send, args=(int(r),))
     thread.start()
     threads.append(thread)
 
@@ -64,4 +63,4 @@ for thread in threads:
     thread.join()
 
 tn = (t.time() - st)
-print(f'Done ! Finished in {tru(tn, 4)} seconds. (~ {tru(req/tn, 2)} requests per second.)')
+print(f'Done ! Finished in {tru(tn, 4)} seconds. (~ {tru(r / tn, 2)} requests per second.)')

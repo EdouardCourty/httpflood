@@ -1,10 +1,12 @@
 import sys
 import requests as http
 import threading
+import time as t
+from truncate import truncate as tru
 
 argv = sys.argv[1:len(sys.argv)]
 
-requests = 1000
+req = 1000
 to_start = 1
 
 if len(argv) == 0:
@@ -14,12 +16,12 @@ if len(argv) == 0:
 h = argv[0]
 
 if len(argv) == 2:
-    requests = int(argv[1])
+    req = int(argv[1])
 elif len(argv) > 2:
-    requests = int(argv[1])
+    req = int(argv[1])
     to_start = int(argv[2])
 
-print(f"Starting with the following parameters:\n > h: {h}\n > Requests: {requests}\n > Threads: {to_start}")
+print(f"Starting with the following parameters:\n > h: {h}\n > Requests: {req}\n > Threads: {to_start}")
 is_correct = str.lower(input("Are these values correct ? (Y/N) "))
 
 if not is_correct == "y":
@@ -37,8 +39,16 @@ def send(n):
 
 
 threads = []
+st = t.time()
 
 for i in range(to_start):
-    thread = threading.Thread(target=send, args=(int(requests),))
+    thread = threading.Thread(target=send, args=(int(req),))
     thread.start()
     threads.append(thread)
+
+
+for thread in threads:
+    thread.join()
+
+tn = (t.time() - st)
+print(f'Done ! Finished in {tru(tn, 4)} seconds. (~ {tru(req / tn, 2)} requests per second.)')
